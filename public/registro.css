@@ -2,7 +2,7 @@
     --primary-color: #6467bd; /* Deep blue for main elements */
     --secondary-color: #159895; /* Teal for accents */
     --background-color: #002B5B; /* Dark blue for background */
-    --text-color: #ffffff; /* White for text */
+    --text-color: #000000; /* White for text */
     --error-color: #EA4335; /* Red for errors */
     --field-color: #ffffff; /* Light teal for field elements */
 }
@@ -42,7 +42,7 @@ body, html {
     padding: 2rem;
 }
 
-.login-box {
+.register-box {
     width: 100%;
     max-width: 400px;
     padding: 2rem;
@@ -54,7 +54,7 @@ body, html {
     position: relative;
 }
 
-.login-box::before {
+.register-box::before {
     content: '⚽';
     position: absolute;
     top: -30px;
@@ -145,7 +145,7 @@ button::after {
 }
 
 /* Football field lines */
-.login-box::after {
+.register-box::after {
     content: '';
     position: absolute;
     bottom: 10px;
@@ -170,59 +170,15 @@ button::after {
         order: 2;
     }
 
-    .login-box {
+    .background-image {
+        order: 1;
+        height: 200px;
+    }
+
+    .register-box {
         width: 90%;
     }
 }
-.button-group {
-    display: flex;
-    flex-direction: column; /* Botones en columna */
-    gap: 1rem; /* Espaciado uniforme entre los botones */
-    margin-top: 1.5rem;
-}
-
-button, .btn-google {
-    width: 100%; /* Asegura que ambos tengan el mismo ancho */
-    padding: 0.75rem;
-    border: none;
-    border-radius: 50px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: bold;
-}
-
-button {
-    background-color: var(--primary-color);
-    color: var(--text-color);
-}
-
-button:hover {
-    background-color: var(--secondary-color);
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.btn-google {
-    background-color: #6467bd; /* Azul de Google */
-    color: var(--text-color);
-    text-decoration: none; /* Quita el subrayado */
-    display: inline-block; /* Asegura que se comporte como botón */
-    text-align: center;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-.btn-google:hover {
-    background-color: #6467bd; /* Azul más oscuro al pasar el cursor */
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-decoration: none; /* Asegura que no regrese el subrayado */
-}
-
-
 
 /* Additional styles for number input */
 input[type="number"] {

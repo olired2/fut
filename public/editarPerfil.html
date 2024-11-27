@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil</title>
+</head>
+<body>
+    <h1>Editar Perfil</h1>
+    <form id="editarPerfilForm">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required><br>
+
+        <label for="edad">Edad:</label>
+        <input type="number" id="edad" name="edad" required><br>
+
+        <label for="contacto">Contacto:</label>
+        <input type="text" id="contacto" name="contacto" required><br>
+
+        <label for="experiencia">Experiencia Arbitrando:</label>
+        <input type="text" id="experiencia" name="experiencia" required><br>
+
+        <button type="submit">Guardar Cambios</button>
+    </form>
+
+    <script>
+        // Cargar la información actual del perfil
+        window.onload = async function () {
+            const email = localStorage.getItem('userEmail'); // Obtener el correo guardado
+            const response = await fetch(`/api/usuarios/perfil/${email}`);
+            const userData = await response.json();
+
+            if (userData) {
+                // Completar el formulario con los datos actuales
+                document.getElementById('nombre').value = userData.nombre;
+                document.getElementById('edad').value = userData.edad;
+                document.getElementById('contacto').value = userData.contacto;
+                document.getElementById('experiencia').value = userData.experiencia;
+            }
+        };
+
+        // Enviar los cambios al servidor
+        const editarPerfilForm = document.getElementById('editarPerfilForm');
+        editarPerfilForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(editarPerfilForm);
+            const data = {
+                email: localStorage.getItem('userEmail'),
+                nombre: formData.get('nombre'),
+                edad: formData.get('edad'),
+                contacto: formData.get('contacto'),
+                experiencia: formData.get('experiencia')
+            };
+
+            try {
+                const response = await fetch('/api/usuarios/editar-perfil', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Perfil actualizado');
+                    window.location.href = '/dashboard.html'; // Redirige al dashboard
+                } else {
+                    alert(result.message);
+                }
+            } catch (error) {
+                console.error('Error al actualizar el perfil:', error);
+            }
+        });
+    </script>
+</body>
+</html>

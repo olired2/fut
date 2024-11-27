@@ -7,31 +7,30 @@
     <link rel="stylesheet" href="diseño.css">
 </head>
 <body>
-    <div class="background">
-        <div class="login-box">
-            <h2>Iniciar Sesión</h2>
-            <form id="loginForm">
-                <div class="textbox">
-                    <input type="email" id="email" placeholder="Email" required>
-                </div>
-                <div class="textbox">
-                    <input type="password" id="password" placeholder="Contraseña" required>
-                </div>
-                <button type="submit">Entrar</button>
-                <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
-                <p class="login-link">¿No tienes una cuenta? <a href="registro.html">Registrarse</a></p>
-            </form>
-            <!-- Botón para iniciar sesión con Google -->
-            <a href="/auth/google" class="google-button" style="display: inline-block; padding: 10px 20px; background-color: #4285F4; color: white; border-radius: 5px; text-decoration: none; font-weight: bold; margin-top: 10px;">
-                Iniciar sesión con Google
-            </a>
+    <div class="page-container">
+        <div class="content-area">
+            <div class="login-box">
+                <h2>Iniciar Sesión</h2>
+                <form id="loginForm">
+                    <div class="textbox">
+                        <input type="email" id="email" placeholder="Email" required>
+                    </div>
+                    <div class="textbox">
+                        <input type="password" id="password" placeholder="Contraseña" required>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">Entrar</button>
+                        <a href="/auth/google" class="btn-google">Iniciar sesión con Google</a>
+                    </div>
+                </a>
+                <p class="login-link">¿Olvidaste tu contraseña? <a href="#">Recupérala</a></p>
+                <p class="login-link">¿No tienes cuenta? <a href="registro.html">Regístrate</a></p>
+            </div>
         </div>
     </div>
-
     <script>
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault(); // Evita el envío del formulario por defecto
-
+            e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
@@ -45,11 +44,10 @@
                 });
 
                 const data = await response.json();
-                alert(data.message); // Muestra el mensaje de respuesta
+                alert(data.message);
 
                 if (response.status === 200) {
-                    // Redirigir a otra página o realizar alguna acción después del inicio de sesión exitoso
-                    window.location.href = 'dashboard.html'; // Cambia esto a la página que desees
+                    window.location.href = data.redirect;
                 }
             } catch (error) {
                 console.error('Error al iniciar sesión:', error);

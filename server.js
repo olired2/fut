@@ -1,24 +1,32 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const authRoutes = require('./routes/auth'); // Asegúrate de que esta ruta sea correcta
+const session = require('express-session');
+const authRoutes = require('./routes/auth');
+const crearOrganizadorPorDefecto = require('./config/initOrganizador'); // Importa la función
+
 const app = express();
 
-// Middleware para parsear JSON
 app.use(express.json());
+app.use(session({
+    secret: 'mi-secreto',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}));
 
 // Conexión a MongoDB Atlas
-const mongoURI = 'mongodb+srv://olired2:futbol7@cluster0.qfdl2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
-mongoose.connect(mongoURI)
+mongoose.connect('mongodb+srv://olired2:futbol7@cluster0.qfdl2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
     .then(() => {
         console.log('Conexión exitosa a MongoDB Atlas');
+        crearOrganizadorPorDefecto(); // Llama a la función de creación del organizador después de conectar a la BD
     })
     .catch((error) => {
         console.error('Error al conectar a MongoDB Atlas:', error);
     });
 
 // Sirve archivos estáticos (como CSS)
-app.use(express.static(path.join(__dirname, 'public')));  // Asegúrate de que la carpeta 'public' contiene tus archivos CSS y otros recursos estáticos
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Usar rutas de autenticación
 app.use('/api/usuarios', authRoutes);

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Completar Perfil</title>
+</head>
+<body>
+    <h1>Completa tu perfil</h1>
+    <form id="completarPerfilForm">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required><br>
+
+        <label for="edad">Edad:</label>
+        <input type="number" id="edad" name="edad" required><br>
+
+        <label for="contacto">Contacto:</label>
+        <input type="text" id="contacto" name="contacto" required><br>
+
+        <label for="experiencia">Experiencia Arbitrando:</label>
+        <input type="text" id="experiencia" name="experiencia" required><br>
+
+        <button type="submit">Guardar</button>
+    </form>
+
+    <script>
+        const completarPerfilForm = document.getElementById('completarPerfilForm');
+
+        completarPerfilForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(completarPerfilForm);
+            const data = {
+                email: localStorage.getItem('userEmail'), // Suponiendo que guardaste el correo del usuario después del registro
+                nombre: formData.get('nombre'),
+                edad: formData.get('edad'),
+                contacto: formData.get('contacto'),
+                experiencia: formData.get('experiencia')
+            };
+
+            try {
+                const response = await fetch('/api/usuarios/completar-perfil', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    window.location.href = result.redirect; // Redirigir al dashboard después de completar el perfil
+                } else {
+                    alert(result.message);
+                }
+            } catch (error) {
+                console.error('Error al guardar el perfil:', error);
+            }
+        });
+    </script>
+</body>
+</html>

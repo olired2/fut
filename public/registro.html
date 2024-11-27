@@ -3,74 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrarse</title>
-    <link rel="stylesheet" href="diseño.css">
+    <title>Registro de Árbitro</title>
+    <link rel="stylesheet" href="registro.css">
 </head>
 <body>
-    <div class="background">
-        <div class="register-box">
-            <h2>Registrarse</h2>
-            <form id="registerForm">
-                <div class="textbox">
-                    <input type="text" id="name" placeholder="Nombre" required>
-                </div>
-                <div class="textbox">
-                    <input type="email" id="email" placeholder="Email" required>
-                </div>
-                <div class="textbox">
-                    <input type="password" id="password" placeholder="Contraseña" required>
-                </div>
-                <div class="textbox">
-                    <input type="password" id="confirm_password" placeholder="Confirmar Contraseña" required>
-                </div>
-                <button type="submit">Registrarse</button>
-                <p class="login-link">¿Ya tienes una cuenta? <a href="index.html">Iniciar Sesión</a></p>
-                <!-- Botón para registrarse con Google -->
-                <a href="/auth/google" class="google-button" style="display: inline-block; padding: 10px 20px; background-color: #4285F4; color: white; border-radius: 5px; text-decoration: none; font-weight: bold; margin-top: 10px;">
-                    Registrarse con Google
-                </a>
-            </form>
+    <div class="page-container">
+        <div class="content-area">
+            <div class="register-box">
+                <h2>Registrar Árbitro</h2>
+                <form id="registerForm">
+                    <div class="textbox">
+                        <input type="email" id="email" placeholder="Email" required>
+                    </div>
+                    <div class="textbox">
+                        <input type="password" id="password" placeholder="Contraseña" required>
+                    </div>
+                    <div class="textbox">
+                        <input type="text" id="nombre" placeholder="Nombre" required>
+                    </div>
+                    <div class="textbox">
+                        <input type="number" id="edad" placeholder="Edad" required>
+                    </div>
+                    <div class="textbox">
+                        <input type="text" id="contacto" placeholder="Contacto" required>
+                    </div>
+                    <div class="textbox">
+                        <input type="text" id="experiencia" placeholder="Experiencia arbitrando" required>
+                    </div>
+                    <button type="submit">Registrar</button>
+                </form>
+                <p class="login-link">¿Ya tienes una cuenta? <a href="index.html">Iniciar sesión</a></p>
+            </div>
         </div>
     </div>
-
     <script>
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault(); // Evita el envío del formulario por defecto
 
-            const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm_password').value;
-
-            // Verifica que las contraseñas coincidan
-            if (password !== confirmPassword) {
-                alert('Las contraseñas no coinciden.');
-                return;
-            }
+            const nombre = document.getElementById('nombre').value;
+            const edad = document.getElementById('edad').value;
+            const contacto = document.getElementById('contacto').value;
+            const experiencia = document.getElementById('experiencia').value;
 
             try {
-                // Envío de la solicitud de registro al servidor
                 const response = await fetch('/api/usuarios/registro', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ name, email, password }), // Se envía el nombre, email y contraseña
+                    body: JSON.stringify({ email, password, nombre, edad, contacto, experiencia }),
                 });
 
                 const data = await response.json();
                 alert(data.message); // Muestra el mensaje de respuesta
 
                 if (response.status === 201) {
-                    // Redirigir a otra página después del registro exitoso
-                    window.location.href = 'index.html'; // Cambia esto a la página que desees
+                    window.location.href = 'index.html'; // Redirige al login
                 }
             } catch (error) {
-                console.error('Error al registrarse:', error);
-                alert('Error al registrarse');
+                console.error('Error al registrar:', error);
+                alert('Error al registrar');
             }
         });
     </script>
 </body>
 </html>
-

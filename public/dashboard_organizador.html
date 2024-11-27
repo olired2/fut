@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Refzone</title>
+  <link rel="stylesheet" href="diseñodash.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <!-- Aquí irá el logo -->
+      <img src="img/logo.png" alt="Logo">
+    </div>
+    <div class="profile-container">
+      <!-- Foto de perfil -->
+      <img src="img/perfil1.png" alt="Perfil" class="profile-pic">
+
+      <!-- Nombre del usuario y botón de cerrar sesión -->
+      <div class="profile-info">
+        <span class="username">Usuario Admin</span>
+        <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Botón agregar partido -->
+  <section class="add-game">
+    <button class="add-game-btn">Agregar Partido</button>
+  </section>
+
+  <!-- Lista de partidos -->
+  <section class="games-list" id="gamesList">
+    <!-- Los partidos se cargarán aquí dinámicamente -->
+  </section>
+
+  <!-- Pie de página con contactos -->
+  <footer class="footer">
+    <div class="contact-info">
+      <p><strong>Contacto:</strong></p>
+      <p>Teléfono: +52 312 100 1096</p>
+      <p>Email: contacto@refzone.com</p>
+      <p>Redes Sociales:
+        <a href="#">Facebook</a> | 
+        <a href="#">Instagram</a> | 
+        <a href="#">Twitter</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Modal para agregar partido -->
+  <div id="addGameModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeAddGameModal()">×</span>
+      <h2>Agregar Partido</h2>
+      <form id="addGameForm">
+        <label for="gameName">Nombre del Partido:</label>
+        <input type="text" id="gameName" required><br>
+        
+        <label for="gameDate">Fecha del Partido:</label>
+        <input type="date" id="gameDate" required><br>
+        
+        <label for="gameTime">Hora del Partido:</label>
+        <input type="time" id="gameTime" required><br>
+        
+        <label for="gameLocation">Ubicación:</label>
+        <input type="text" id="gameLocation" required><br>
+        
+        <button type="submit">Guardar Partido</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Función para abrir el modal de agregar partido
+    document.querySelector('.add-game-btn').addEventListener('click', function() {
+      document.getElementById('addGameModal').style.display = 'block';
+    });
+
+    // Función para cerrar el modal de agregar partido
+    function closeAddGameModal() {
+      document.getElementById('addGameModal').style.display = 'none';
+    }
+
+    // Función para cerrar sesión
+    async function logout() {
+      try {
+        const response = await fetch('/api/usuarios/logout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+        alert(data.message); // Muestra el mensaje de cierre de sesión
+
+        if (response.status === 200) {
+          // Redirige a la página de inicio de sesión
+          window.location.href = '/index.html';
+        }
+      } catch (error) {
+        console.error('Error al cerrar sesión:', error);
+        alert('Error al cerrar sesión');
+      }
+    }
+
+    // Función para agregar un partido
+    document.getElementById('addGameForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+
+      const gameName = document.getElementById('gameName').value;
+      const gameDate = document.getElementById('gameDate').value;
+      const gameTime = document.getElementById('gameTime').value;
+      const gameLocation = document.getElementById('gameLocation').value;
+
+      const gameData = {
+        name: gameName,
+        date: gameDate,
+        time: gameTime,
+        location: gameLocation
+      };
+
+      try {
+        const response = await fetch('/api/games', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(gameData)
+        });
+
+        const data = await response.json();
+        alert(data.message); // Muestra el mensaje de éxito o error
+
+        if (response.status === 200) {
+          closeAddGameModal(); // Cierra el modal después de agregar
+          loadGames(); // Recarga la lista de partidos
+        }
+      } catch (error) {
+        console.error('Error al agregar partido:', error);
+        alert('Error al agregar partido');
+      }
+    });
+
+    // Función para cargar los partidos desde la API
+    async function loadGames() {
+      try {
+        const response = await fetch('/api/games');
+        const games = await response.json();
+
+        const gamesList = document.getElementById('gamesList');
+        gamesList.innerHTML = ''; // Limpiar la lista de partidos
+
+        games.forEach(game => {
+          const gameCard = document.createElement('div');
+          gameCard.classList.add('game-card');
+          gameCard.innerHTML = `
+            <p><strong>${game.name}</strong></p>
+            <p>${game.date} a las ${game.time}</p>
+            <p>${game.location}</p>
+            <button onclick="editGame(${game.id})">Editar</button>
+          `;
+          gamesList.appendChild(gameCard);
+        });
+      } catch (error) {
+        console.error('Error al cargar los partidos:', error);
+      }
+    }
+
+    // Función de edición de partido (aún no implementada)
+    function editGame(gameId) {
+      alert(`Función de editar partido para el ID: ${gameId} aún no está implementada.`);
+    }
+
+    // Cargar los partidos cuando la página se cargue
+    loadGames();
+  </script>
+</body>
+</html>
